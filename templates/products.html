@@ -1,0 +1,686 @@
+{% extends "base.html" %}
+
+{% block title %}
+Data Produk | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Data Produk
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       SEARCH BAR
+    ====================================================== */
+
+    .product-search-box {
+        position: relative;
+        margin-bottom: 18px;
+    }
+
+    .product-search-input {
+        width: 100%;
+        height: 46px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 0 44px 0 42px;
+        font-size: 12px;
+        color: #111827;
+        background: #ffffff;
+        outline: none;
+        transition: 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .product-search-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+    }
+
+    .product-search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: #9ca3af;
+        pointer-events: none;
+    }
+
+    .product-search-clear {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        border: none;
+        border-radius: 7px;
+        background: #f3f4f6;
+        color: #6b7280;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+    }
+
+    .product-search-clear:hover {
+        background: #e5e7eb;
+        color: #111827;
+    }
+
+    .search-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+    }
+
+    .search-result-info {
+        font-size: 10px;
+        color: #9ca3af;
+    }
+
+    .search-hint {
+        font-size: 10px;
+        color: #9ca3af;
+    }
+
+
+    /* =====================================================
+       TABLE ROW
+    ====================================================== */
+
+    .product-row.hidden-row {
+        display: none;
+    }
+
+
+    /* =====================================================
+       NO SEARCH RESULT
+    ====================================================== */
+
+    .search-empty-state {
+        display: none;
+        padding: 35px 20px;
+        text-align: center;
+        background: #f8fafc;
+        border-radius: 12px;
+        margin-top: 10px;
+    }
+
+    .search-empty-icon {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .search-empty-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #374151;
+    }
+
+    .search-empty-description {
+        margin-top: 5px;
+        font-size: 10px;
+        color: #9ca3af;
+    }
+
+</style>
+
+
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Data Produk
+    </div>
+
+    <div class="page-header-description">
+        Kelola seluruh data barang dan stok inventory PT Aldigens Putera Persada.
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN CARD
+====================================================== -->
+
+<div class="card" style="padding: 20px;">
+
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:18px;
+        gap:12px;
+        flex-wrap:wrap;
+    ">
+
+        <div>
+
+            <div style="
+                font-size:14px;
+                font-weight:800;
+                color:#111827;
+            ">
+                Daftar Produk
+            </div>
+
+            <div style="
+                font-size:10px;
+                color:#9ca3af;
+                margin-top:4px;
+            ">
+                Part Number menggunakan data asli perusahaan. Kode Internal digunakan oleh sistem.
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('add_product') }}"
+            class="btn btn-primary"
+        >
+            + Tambah Produk
+        </a>
+
+    </div>
+
+
+    {% if products %}
+
+
+    <!-- =================================================
+         SEARCH BAR
+    ================================================== -->
+
+    <div class="product-search-box">
+
+        <span class="product-search-icon">
+            🔍
+        </span>
+
+        <input
+            type="text"
+            id="productSearch"
+            class="product-search-input"
+            placeholder="Cari nama barang, part number, kode internal, barcode, kategori..."
+            autocomplete="off"
+        >
+
+        <button
+            type="button"
+            id="clearSearch"
+            class="product-search-clear"
+            onclick="clearProductSearch()"
+            title="Hapus pencarian"
+        >
+            ✕
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         SEARCH INFO
+    ================================================== -->
+
+    <div class="search-info">
+
+        <div
+            id="searchResultInfo"
+            class="search-result-info"
+        >
+            Menampilkan {{ products|length }} produk
+        </div>
+
+        <div class="search-hint">
+            Pencarian berdasarkan nama, kode, part number, barcode, kategori, atau satuan.
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TABLE
+    ================================================== -->
+
+    <div class="table-wrapper">
+
+        <table
+            class="data-table"
+            id="productTable"
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>No</th>
+
+                    <th>Kode Internal</th>
+
+                    <th>Part Number</th>
+
+                    <th>Nama Produk</th>
+
+                    <th>Kategori</th>
+
+                    <th>Barcode</th>
+
+                    <th>Satuan</th>
+
+                    <th>Stok</th>
+
+                    <th>Aksi</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="productTableBody">
+
+                {% for product in products %}
+
+                <tr
+                    class="product-row"
+                    data-search="
+                        {{ product['product_code'] or '' }}
+                        {{ product['part_number'] or '' }}
+                        {{ product['name'] or '' }}
+                        {{ product['category'] or '' }}
+                        {{ product['barcode'] or '' }}
+                        {{ product['unit'] or '' }}
+                    "
+                >
+
+                    <td>
+                        {{ loop.index }}
+                    </td>
+
+
+                    <!-- KODE INTERNAL -->
+
+                    <td>
+
+                        <strong>
+                            {{ product["product_code"] }}
+                        </strong>
+
+                    </td>
+
+
+                    <!-- PART NUMBER -->
+
+                    <td>
+
+                        {% if product["part_number"] %}
+
+                            <span
+                                style="
+                                    font-weight:700;
+                                    color:#374151;
+                                "
+                            >
+                                {{ product["part_number"] }}
+                            </span>
+
+                        {% else %}
+
+                            <span
+                                style="
+                                    color:#9ca3af;
+                                    font-style:italic;
+                                "
+                            >
+                                -
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- NAMA -->
+
+                    <td>
+                        {{ product["name"] }}
+                    </td>
+
+
+                    <!-- KATEGORI -->
+
+                    <td>
+                        {{ product["category"] or "-" }}
+                    </td>
+
+
+                    <!-- BARCODE -->
+
+                    <td>
+
+                        <span class="badge badge-gray">
+                            {{ product["barcode"] }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- SATUAN -->
+
+                    <td>
+                        {{ product["unit"] }}
+                    </td>
+
+
+                    <!-- STOK -->
+
+                    <td>
+
+                        {% if product["stock"] > 0 %}
+
+                            <span class="badge badge-green">
+                                {{ product["stock"] }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-red">
+                                0
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- AKSI -->
+
+                    <td>
+
+                        <div class="action-group">
+
+                            <a
+                                href="{{ url_for(
+                                    'edit_product',
+                                    product_id=product['id']
+                                ) }}"
+                                class="btn btn-secondary"
+                                style="padding:7px 10px;"
+                            >
+                                Edit
+                            </a>
+
+
+                            <a
+                                href="{{ url_for(
+                                    'barcode',
+                                    product_id=product['id']
+                                ) }}"
+                                class="btn btn-primary"
+                                style="padding:7px 10px;"
+                            >
+                                Barcode
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- =================================================
+         EMPTY SEARCH RESULT
+    ================================================== -->
+
+    <div
+        id="searchEmptyState"
+        class="search-empty-state"
+    >
+
+        <div class="search-empty-icon">
+            🔍
+        </div>
+
+        <div class="search-empty-title">
+            Produk tidak ditemukan
+        </div>
+
+        <div class="search-empty-description">
+            Coba gunakan nama barang, kode internal, part number, atau barcode yang berbeda.
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- =================================================
+         EMPTY DATABASE
+    ================================================== -->
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            📦
+        </div>
+
+        <div class="empty-title">
+            Belum ada produk
+        </div>
+
+        <div class="empty-description">
+            Silakan tambahkan produk pertama.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<!-- =====================================================
+     SEARCH SCRIPT
+====================================================== -->
+
+<script>
+
+    const searchInput =
+        document.getElementById(
+            "productSearch"
+        );
+
+    const clearButton =
+        document.getElementById(
+            "clearSearch"
+        );
+
+    const resultInfo =
+        document.getElementById(
+            "searchResultInfo"
+        );
+
+    const emptyState =
+        document.getElementById(
+            "searchEmptyState"
+        );
+
+    const productRows =
+        document.querySelectorAll(
+            ".product-row"
+        );
+
+
+    function normalizeSearchText(value) {
+
+        return String(value || "")
+            .toLowerCase()
+            .trim();
+
+    }
+
+
+    function performProductSearch() {
+
+        if (!searchInput) {
+            return;
+        }
+
+        const keyword =
+            normalizeSearchText(
+                searchInput.value
+            );
+
+        let visibleCount = 0;
+
+
+        productRows.forEach(
+            function(row) {
+
+                const searchText =
+                    normalizeSearchText(
+                        row.getAttribute(
+                            "data-search"
+                        )
+                    );
+
+                if (
+                    keyword === ""
+                    ||
+                    searchText.includes(keyword)
+                ) {
+
+                    row.classList.remove(
+                        "hidden-row"
+                    );
+
+                    visibleCount++;
+
+                } else {
+
+                    row.classList.add(
+                        "hidden-row"
+                    );
+
+                }
+
+            }
+        );
+
+
+        if (keyword === "") {
+
+            clearButton.style.display =
+                "none";
+
+            resultInfo.textContent =
+                "Menampilkan "
+                + productRows.length
+                + " produk";
+
+        } else {
+
+            clearButton.style.display =
+                "flex";
+
+            resultInfo.textContent =
+                "Menampilkan "
+                + visibleCount
+                + " dari "
+                + productRows.length
+                + " produk";
+
+        }
+
+
+        if (
+            emptyState
+            &&
+            keyword !== ""
+            &&
+            visibleCount === 0
+        ) {
+
+            emptyState.style.display =
+                "block";
+
+        } else if (emptyState) {
+
+            emptyState.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    function clearProductSearch() {
+
+        if (!searchInput) {
+            return;
+        }
+
+        searchInput.value = "";
+
+        searchInput.focus();
+
+        performProductSearch();
+
+    }
+
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            performProductSearch
+        );
+
+        searchInput.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    clearProductSearch();
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+{% endblock %}

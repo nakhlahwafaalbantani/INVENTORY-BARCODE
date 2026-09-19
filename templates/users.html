@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manajemen User | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Manajemen User
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Manajemen User
+    </div>
+
+    <div class="page-header-description">
+        Kelola akun pengguna yang dapat mengakses sistem inventory.
+    </div>
+
+</div>
+
+
+<div style="
+    display:grid;
+    grid-template-columns:330px 1fr;
+    gap:18px;
+    align-items:start;
+">
+
+
+    <!-- =================================================
+         TAMBAH USER
+    ================================================== -->
+
+    <div class="card" style="padding:20px;">
+
+        <div style="
+            font-size:14px;
+            font-weight:900;
+            color:#111827;
+        ">
+            Tambah User
+        </div>
+
+        <div style="
+            margin-top:5px;
+            margin-bottom:18px;
+            font-size:10px;
+            color:#94a3b8;
+        ">
+            Buat akun baru untuk staf atau administrator.
+        </div>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('add_user') }}"
+        >
+
+            <div style="margin-bottom:14px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="contoh: gudang01"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:14px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Nama Lengkap
+                </label>
+
+                <input
+                    type="text"
+                    name="full_name"
+                    placeholder="Nama pengguna"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:14px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Minimal 6 karakter"
+                    minlength="6"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:18px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Role
+                </label>
+
+                <select
+                    name="role"
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                        background:#fff;
+                    "
+                >
+
+                    <option value="Staff Gudang">
+                        Staff Gudang
+                    </option>
+
+                    <option value="Administrator">
+                        Administrator
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                style="width:100%;"
+            >
+                + Tambah User
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =================================================
+         DAFTAR USER
+    ================================================== -->
+
+    <div class="card" style="padding:20px;">
+
+        <div style="
+            font-size:14px;
+            font-weight:900;
+            color:#111827;
+        ">
+            Daftar Pengguna
+        </div>
+
+        <div style="
+            margin-top:5px;
+            margin-bottom:18px;
+            font-size:10px;
+            color:#94a3b8;
+        ">
+            Akun yang terdaftar pada sistem.
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>No</th>
+
+                        <th>Username</th>
+
+                        <th>Nama Lengkap</th>
+
+                        <th>Role</th>
+
+                        <th>Dibuat</th>
+
+                        <th>Aksi</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+
+                        <td>
+                            <strong>
+                                {{ user["username"] }}
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            {{ user["full_name"] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if user["role"] == "Administrator" %}
+
+                                <span class="badge badge-green">
+                                    Administrator
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-gray">
+                                    Staff Gudang
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ user["created_at"] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if user["id"] != session.get("user_id") %}
+
+                            <form
+                                method="POST"
+                                action="{{ url_for(
+                                    'delete_user',
+                                    user_id=user['id']
+                                ) }}"
+                                onsubmit="
+                                    return confirm(
+                                        'Hapus user ini?'
+                                    );
+                                "
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                    style="
+                                        min-height:32px;
+                                        padding:0 10px;
+                                    "
+                                >
+                                    Hapus
+                                </button>
+
+                            </form>
+
+                            {% else %}
+
+                            <span style="
+                                font-size:9px;
+                                color:#94a3b8;
+                            ">
+                                Akun aktif
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    @media (max-width: 1000px) {
+
+        .page-header + div {
+            grid-template-columns: 1fr !important;
+        }
+
+    }
+
+</style>
+
+{% endblock %}

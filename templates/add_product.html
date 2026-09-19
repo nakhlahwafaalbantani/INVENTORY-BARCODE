@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}
+Tambah Produk | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Tambah Produk
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Tambah Produk
+    </div>
+
+    <div class="page-header-description">
+        Tambahkan barang baru ke database inventory.
+    </div>
+
+</div>
+
+
+<div class="card" style="max-width:850px; padding:24px;">
+
+    <form method="POST">
+
+        <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:16px;
+        ">
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Kode Produk
+                </label>
+
+                <input
+                    type="text"
+                    name="product_code"
+                    placeholder="Contoh: PDU-001"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Nama Produk
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Contoh: PDU 24VDC"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Kategori
+                </label>
+
+                <input
+                    type="text"
+                    name="category"
+                    placeholder="Contoh: Electrical"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Satuan
+                </label>
+
+                <input
+                    type="text"
+                    name="unit"
+                    placeholder="Contoh: Unit"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Stok Awal
+                </label>
+
+                <input
+                    type="number"
+                    name="stock"
+                    min="0"
+                    value="0"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            margin-top:10px;
+            padding:14px;
+            background:#f8fafc;
+            border:1px solid #eef2f7;
+            border-radius:12px;
+            font-size:11px;
+            color:#6b7280;
+            line-height:1.6;
+        ">
+
+            <strong style="color:#374151;">
+                Barcode:
+            </strong>
+
+            Barcode akan dibuat otomatis berdasarkan kode produk.
+
+        </div>
+
+
+        <div style="
+            display:flex;
+            gap:10px;
+            margin-top:22px;
+        ">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Simpan Produk
+            </button>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="btn btn-secondary"
+            >
+                Batal
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

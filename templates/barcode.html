@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Barcode Produk | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Barcode Produk
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Barcode Produk
+    </div>
+
+    <div class="page-header-description">
+        Barcode yang digunakan untuk identifikasi produk.
+    </div>
+
+</div>
+
+
+<div style="
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    gap:20px;
+    max-width:1000px;
+">
+
+
+    <div class="card" style="padding:24px;">
+
+        <div style="
+            font-size:11px;
+            color:#9ca3af;
+            margin-bottom:6px;
+        ">
+            NAMA PRODUK
+        </div>
+
+        <div style="
+            font-size:20px;
+            font-weight:800;
+            color:#111827;
+            margin-bottom:20px;
+        ">
+            {{ product["name"] }}
+        </div>
+
+
+        <div style="margin-bottom:13px;">
+
+            <div style="
+                font-size:10px;
+                color:#9ca3af;
+                margin-bottom:4px;
+            ">
+                KODE PRODUK
+            </div>
+
+            <strong>
+                {{ product["product_code"] }}
+            </strong>
+
+        </div>
+
+
+        <div style="margin-bottom:13px;">
+
+            <div style="
+                font-size:10px;
+                color:#9ca3af;
+                margin-bottom:4px;
+            ">
+                KATEGORI
+            </div>
+
+            <strong>
+                {{ product["category"] or "-" }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <div style="
+                font-size:10px;
+                color:#9ca3af;
+                margin-bottom:4px;
+            ">
+                BARCODE
+            </div>
+
+            <strong>
+                {{ product["barcode"] }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="card" style="padding:24px; text-align:center;">
+
+        <div style="
+            font-size:13px;
+            font-weight:800;
+            margin-bottom:18px;
+        ">
+            {{ product["product_code"] }}
+        </div>
+
+
+        <div style="
+            border:1px dashed #dbe2ea;
+            border-radius:12px;
+            padding:24px;
+            background:#ffffff;
+        ">
+
+            <img
+                src="{{ barcode_url }}"
+                alt="Barcode {{ product['product_code'] }}"
+                style="
+                    max-width:100%;
+                    height:auto;
+                "
+            >
+
+        </div>
+
+
+        <div style="
+            margin-top:18px;
+            font-size:11px;
+            color:#6b7280;
+        ">
+            {{ product["barcode"] }}
+        </div>
+
+
+        <div style="
+            margin-top:20px;
+        ">
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="window.print()"
+            >
+                Cetak Barcode
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

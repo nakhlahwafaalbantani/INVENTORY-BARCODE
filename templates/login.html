@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Login | PT Aldigens Putera Persada
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #172554,
+                    #1d4ed8
+                );
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+
+            background: #ffffff;
+
+            border-radius: 22px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.30
+                );
+        }
+
+        .logo {
+            width: 92px;
+            height: 92px;
+
+            object-fit: cover;
+
+            border-radius: 20px;
+
+            display: block;
+
+            margin:
+                0 auto
+                18px;
+        }
+
+        .company {
+            text-align: center;
+
+            font-size: 18px;
+
+            font-weight: 900;
+
+            color: #111827;
+        }
+
+        .system {
+            margin-top: 5px;
+
+            text-align: center;
+
+            font-size: 10px;
+
+            color: #94a3b8;
+        }
+
+        .welcome {
+            margin-top: 28px;
+
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 22px;
+
+            font-weight: 900;
+
+            color: #111827;
+        }
+
+        .welcome-text {
+            margin-top: 7px;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+
+            color: #94a3b8;
+        }
+
+        .error {
+            margin-top: 20px;
+
+            padding:
+                11px 13px;
+
+            border-radius: 9px;
+
+            background: #fef2f2;
+
+            border:
+                1px solid
+                #fecaca;
+
+            color: #b91c1c;
+
+            font-size: 11px;
+        }
+
+        .form {
+            margin-top: 23px;
+        }
+
+        .group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            color: #374151;
+        }
+
+        input {
+            width: 100%;
+
+            height: 47px;
+
+            border:
+                1px solid
+                #e5e7eb;
+
+            border-radius: 10px;
+
+            padding:
+                0 13px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            font-size: 12px;
+        }
+
+        input:focus {
+            background: #ffffff;
+
+            border-color:
+                #2563eb;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(
+                    37,
+                    99,
+                    235,
+                    0.08
+                );
+        }
+
+        .password-box {
+            position: relative;
+        }
+
+        .password-box input {
+            padding-right: 45px;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 7px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            width: 34px;
+            height: 34px;
+
+            border: none;
+
+            background: transparent;
+
+            cursor: pointer;
+        }
+
+        .login-button {
+            width: 100%;
+
+            height: 47px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+
+            color: white;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            cursor: pointer;
+        }
+
+        .default-account {
+            margin-top: 18px;
+
+            padding:
+                11px 13px;
+
+            border-radius: 9px;
+
+            background: #f8fafc;
+
+            color: #64748b;
+
+            font-size: 9px;
+
+            line-height: 1.7;
+
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 22px;
+
+            padding-top: 17px;
+
+            border-top:
+                1px solid
+                #f1f5f9;
+
+            text-align: center;
+
+            font-size: 9px;
+
+            color: #94a3b8;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="login-card">
+
+        <img
+            src="{{ url_for(
+                'static',
+                filename='logo.png'
+            ) }}"
+            class="logo"
+            alt="PT Aldigens Putera Persada"
+        >
+
+
+        <div class="company">
+            PT ALDIGENS PUTERA PERSADA
+        </div>
+
+
+        <div class="system">
+            Inventory Management System
+        </div>
+
+
+        <div class="welcome">
+
+            <div class="welcome-title">
+                Selamat Datang
+            </div>
+
+            <div class="welcome-text">
+                Silakan masuk untuk mengakses
+                sistem inventory perusahaan.
+            </div>
+
+        </div>
+
+
+        {% if error_message %}
+
+        <div class="error">
+            ⚠️ {{ error_message }}
+        </div>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            class="form"
+            autocomplete="off"
+        >
+
+            <div class="group">
+
+                <label>
+                    USERNAME
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Masukkan username"
+                    required
+                    autofocus
+                >
+
+            </div>
+
+
+            <div class="group">
+
+                <label>
+                    PASSWORD
+                </label>
+
+                <div class="password-box">
+
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="Masukkan password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword()"
+                    >
+                        👁️
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+                MASUK KE SISTEM
+            </button>
+
+        </form>
+
+
+        <div class="default-account">
+
+            <strong>Akun awal sistem</strong>
+
+            <br>
+
+            Username:
+            <strong>admin</strong>
+
+            &nbsp; | &nbsp;
+
+            Password:
+            <strong>admin123</strong>
+
+        </div>
+
+
+        <div class="footer">
+
+            Sistem Inventory Internal
+
+            <br>
+
+            PT Aldigens Putera Persada
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function togglePassword() {
+
+            const password =
+                document.getElementById(
+                    "password"
+                );
+
+            if (
+                password.type ===
+                "password"
+            ) {
+
+                password.type = "text";
+
+            } else {
+
+                password.type = "password";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

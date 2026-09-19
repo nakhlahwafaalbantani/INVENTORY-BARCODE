@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profil Saya | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Profil Saya
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Profil Saya
+    </div>
+
+    <div class="page-header-description">
+        Kelola informasi akun dan password pengguna.
+    </div>
+
+</div>
+
+
+{% if message %}
+
+<div
+    class="card"
+    style="
+        padding:13px 16px;
+        margin-bottom:15px;
+        background:#f0fdf4;
+        border-color:#dcfce7;
+        color:#15803d;
+        font-size:10px;
+        font-weight:700;
+    "
+>
+    ✅ {{ message }}
+</div>
+
+{% endif %}
+
+
+{% if error_message %}
+
+<div
+    class="card"
+    style="
+        padding:13px 16px;
+        margin-bottom:15px;
+        background:#fef2f2;
+        border-color:#fecaca;
+        color:#b91c1c;
+        font-size:10px;
+        font-weight:700;
+    "
+>
+    ⚠️ {{ error_message }}
+</div>
+
+{% endif %}
+
+
+<div style="
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+">
+
+
+    <!-- =================================================
+         PROFIL
+    ================================================== -->
+
+    <div class="card" style="padding:22px;">
+
+        <div style="
+            font-size:14px;
+            font-weight:900;
+            color:#111827;
+        ">
+            Informasi Akun
+        </div>
+
+        <div style="
+            margin-top:5px;
+            margin-bottom:20px;
+            font-size:10px;
+            color:#94a3b8;
+        ">
+            Informasi dasar pengguna yang sedang login.
+        </div>
+
+
+        <form method="POST">
+
+            <input
+                type="hidden"
+                name="action"
+                value="update_profile"
+            >
+
+
+            <div style="margin-bottom:16px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    value="{{ user['username'] }}"
+                    disabled
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        background:#f8fafc;
+                        color:#94a3b8;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:16px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Nama Lengkap
+                </label>
+
+                <input
+                    type="text"
+                    name="full_name"
+                    value="{{ user['full_name'] }}"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:20px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Role
+                </label>
+
+                <input
+                    type="text"
+                    value="{{ user['role'] }}"
+                    disabled
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        background:#f8fafc;
+                        color:#64748b;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Simpan Profil
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =================================================
+         PASSWORD
+    ================================================== -->
+
+    <div class="card" style="padding:22px;">
+
+        <div style="
+            font-size:14px;
+            font-weight:900;
+            color:#111827;
+        ">
+            Ubah Password
+        </div>
+
+        <div style="
+            margin-top:5px;
+            margin-bottom:20px;
+            font-size:10px;
+            color:#94a3b8;
+        ">
+            Gunakan password minimal 6 karakter.
+        </div>
+
+
+        <form method="POST">
+
+            <input
+                type="hidden"
+                name="action"
+                value="change_password"
+            >
+
+
+            <div style="margin-bottom:16px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Password Lama
+                </label>
+
+                <input
+                    type="password"
+                    name="current_password"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:16px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Password Baru
+                </label>
+
+                <input
+                    type="password"
+                    name="new_password"
+                    minlength="6"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <div style="margin-bottom:20px;">
+
+                <label style="
+                    display:block;
+                    margin-bottom:6px;
+                    font-size:10px;
+                    font-weight:800;
+                    color:#374151;
+                ">
+                    Konfirmasi Password Baru
+                </label>
+
+                <input
+                    type="password"
+                    name="confirm_password"
+                    minlength="6"
+                    required
+                    style="
+                        width:100%;
+                        height:42px;
+                        border:1px solid #e5e7eb;
+                        border-radius:9px;
+                        padding:0 11px;
+                        outline:none;
+                        font-size:11px;
+                    "
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Ubah Password
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    @media (max-width: 850px) {
+
+        .page-header + div {
+            grid-template-columns: 1fr !important;
+        }
+
+    }
+
+</style>
+
+{% endblock %}

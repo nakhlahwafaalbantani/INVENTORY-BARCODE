@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Produk | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Edit Produk
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Edit Produk
+    </div>
+
+    <div class="page-header-description">
+        Perbarui informasi produk dan inventory.
+    </div>
+
+</div>
+
+
+<div class="card" style="max-width:850px; padding:24px;">
+
+    <form method="POST">
+
+        <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:16px;
+        ">
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Kode Produk
+                </label>
+
+                <input
+                    type="text"
+                    name="product_code"
+                    value="{{ product['product_code'] }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Nama Produk
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ product['name'] }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Kategori
+                </label>
+
+                <input
+                    type="text"
+                    name="category"
+                    value="{{ product['category'] or '' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Satuan
+                </label>
+
+                <input
+                    type="text"
+                    name="unit"
+                    value="{{ product['unit'] }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Stok
+                </label>
+
+                <input
+                    type="number"
+                    name="stock"
+                    min="0"
+                    value="{{ product['stock'] }}"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <div style="
+            background:#f8fafc;
+            border:1px solid #eef2f7;
+            padding:14px;
+            border-radius:12px;
+            margin-top:3px;
+            font-size:11px;
+            color:#6b7280;
+        ">
+
+            Barcode saat ini:
+
+            <strong style="color:#111827;">
+                {{ product['barcode'] }}
+            </strong>
+
+        </div>
+
+
+        <div style="
+            display:flex;
+            gap:10px;
+            margin-top:22px;
+        ">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                Simpan Perubahan
+            </button>
+
+
+            <a
+                href="{{ url_for('products') }}"
+                class="btn btn-secondary"
+            >
+                Batal
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

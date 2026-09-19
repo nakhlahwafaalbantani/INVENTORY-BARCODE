@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}
+Riwayat Transaksi | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Riwayat
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Riwayat Transaksi
+    </div>
+
+    <div class="page-header-description">
+        Histori seluruh aktivitas barang masuk dan barang keluar.
+    </div>
+
+</div>
+
+
+<div class="card" style="padding:20px;">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:18px;
+        gap:12px;
+        flex-wrap:wrap;
+    ">
+
+        <div>
+
+            <div style="
+                font-size:14px;
+                font-weight:800;
+            ">
+                Histori Inventory
+            </div>
+
+            <div style="
+                font-size:10px;
+                color:#9ca3af;
+                margin-top:3px;
+            ">
+                Seluruh transaksi yang sudah tersimpan.
+            </div>
+
+        </div>
+
+
+        <div style="
+            display:flex;
+            gap:8px;
+            flex-wrap:wrap;
+        ">
+
+            <a
+                href="{{ url_for('reports') }}"
+                class="btn btn-secondary"
+            >
+                📊 Laporan Mingguan
+            </a>
+
+
+            <a
+                href="{{ url_for('add_transaction') }}"
+                class="btn btn-primary"
+            >
+                + Transaksi Baru
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if transactions %}
+
+    <div class="table-wrapper">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>No</th>
+                    <th>Tanggal</th>
+                    <th>Produk</th>
+                    <th>Kode</th>
+                    <th>Barcode</th>
+                    <th>Kategori</th>
+                    <th>Transaksi</th>
+                    <th>Jumlah</th>
+                    <th>Stok Sebelum</th>
+                    <th>Stok Sesudah</th>
+                    <th>User</th>
+                    <th>PC / Perangkat</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for transaction in transactions %}
+
+                <tr>
+
+                    <td>
+                        {{ loop.index }}
+                    </td>
+
+                    <td>
+                        {{ transaction["transaction_time"] }}
+                    </td>
+
+                    <td>
+                        <strong>
+                            {{ transaction["name"] }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ transaction["product_code"] }}
+                    </td>
+
+                    <td>
+                        {{ transaction["barcode"] }}
+                    </td>
+
+                    <td>
+                        {{ transaction["category"] or "-" }}
+                    </td>
+
+                    <td>
+
+                        {% if transaction["transaction_type"] == "MASUK" %}
+
+                            <span class="badge badge-green">
+                                MASUK
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-red">
+                                KELUAR
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+                        {{ transaction["quantity"] }}
+                        {{ transaction["unit"] }}
+                    </td>
+
+                    <td>
+                        {{ transaction["stock_before"] }}
+                    </td>
+
+                    <td>
+                        {{ transaction["stock_after"] }}
+                    </td>
+
+                    <td>
+                        {{ transaction["user_name"] or "-" }}
+                    </td>
+
+                    <td>
+                        {{ transaction["client_pc"] or "-" }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">
+            ◷
+        </div>
+
+        <div class="empty-title">
+            Belum ada transaksi
+        </div>
+
+        <div class="empty-description">
+            Transaksi yang dilakukan akan muncul di halaman ini.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

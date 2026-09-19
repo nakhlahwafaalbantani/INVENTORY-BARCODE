@@ -1,0 +1,710 @@
+{% extends "base.html" %}
+
+{% block title %}
+Transaksi | PT Aldigens Putera Persada
+{% endblock %}
+
+{% block page_title %}
+Transaksi
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    .transaction-layout {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+        max-width: 1100px;
+    }
+
+    .transaction-card {
+        padding: 24px;
+    }
+
+    .transaction-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+
+    .transaction-description {
+        font-size: 10px;
+        color: #9ca3af;
+        margin-bottom: 20px;
+    }
+
+    .product-summary {
+        padding: 17px;
+        border-radius: 13px;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
+        margin-bottom: 20px;
+    }
+
+    .product-summary-label {
+        font-size: 9px;
+        color: #6b7280;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .product-summary-name {
+        font-size: 19px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .product-summary-code {
+        margin-top: 4px;
+        color: #2563eb;
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    .product-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .info-box {
+        padding: 11px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+    }
+
+    .info-label {
+        font-size: 9px;
+        color: #9ca3af;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        font-size: 11px;
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .transaction-choice {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        margin-bottom: 18px;
+    }
+
+    .transaction-choice button {
+        min-height: 55px;
+        border-radius: 11px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 800;
+        transition: 0.2s;
+    }
+
+    .transaction-choice button:hover {
+        background: #f8fafc;
+    }
+
+    .transaction-choice button.active-in {
+        background: #f0fdf4;
+        border-color: #86efac;
+        color: #15803d;
+    }
+
+    .transaction-choice button.active-out {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #dc2626;
+    }
+
+    .transaction-type-input {
+        display: none;
+    }
+
+    .current-stock {
+        padding: 13px;
+        margin-bottom: 16px;
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 10px;
+    }
+
+    .current-stock-label {
+        font-size: 9px;
+        color: #9ca3af;
+    }
+
+    .current-stock-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: #111827;
+        margin-top: 3px;
+    }
+
+    .workflow {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .workflow-item {
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 10px;
+    }
+
+    .workflow-number {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .workflow-title {
+        font-size: 11px;
+        font-weight: 800;
+        color: #374151;
+    }
+
+    .workflow-text {
+        font-size: 9px;
+        color: #9ca3af;
+        margin-top: 3px;
+        line-height: 1.5;
+    }
+
+    .not-found {
+        padding: 13px;
+        background: #fff7ed;
+        color: #c2410c;
+        border: 1px solid #fed7aa;
+        border-radius: 10px;
+        font-size: 10px;
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 900px) {
+
+        .transaction-layout {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .transaction-choice {
+            grid-template-columns: 1fr;
+        }
+
+        .product-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+
+<div class="page-header">
+
+    <div class="page-header-title">
+        Transaksi Barang
+    </div>
+
+    <div class="page-header-description">
+        Catat barang masuk dan barang keluar secara terpusat.
+    </div>
+
+</div>
+
+
+<div class="transaction-layout">
+
+
+    <!-- =====================================================
+         FORM TRANSAKSI
+    ====================================================== -->
+
+    <div class="card transaction-card">
+
+        <div class="transaction-title">
+            Form Transaksi
+        </div>
+
+        <div class="transaction-description">
+            Produk hasil scan sudah otomatis dipilih.
+        </div>
+
+
+        {% if scanned_product %}
+
+        <div class="product-summary">
+
+            <div class="product-summary-label">
+                Produk Terpilih
+            </div>
+
+            <div class="product-summary-name">
+                {{ scanned_product["name"] }}
+            </div>
+
+            <div class="product-summary-code">
+                {{ scanned_product["product_code"] }}
+            </div>
+
+
+            <div class="product-info-grid">
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Barcode
+                    </div>
+
+                    <div class="info-value">
+                        {{ scanned_product["barcode"] }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Kategori
+                    </div>
+
+                    <div class="info-value">
+                        {{ scanned_product["category"] or "-" }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="not-found">
+
+            Belum ada produk dari hasil scan.
+            Silakan masukkan barcode atau kode produk.
+
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <!-- BARCODE -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Barcode / Kode Produk
+                </label>
+
+                <input
+                    type="text"
+                    name="barcode"
+                    value="{% if scanned_product %}{{ scanned_product['barcode'] }}{% endif %}"
+                    placeholder="Barcode / kode produk"
+                    required
+                >
+
+            </div>
+
+
+            <!-- TRANSACTION TYPE -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Jenis Transaksi
+                </label>
+
+
+                <div class="transaction-choice">
+
+                    <button
+                        type="button"
+                        id="btnMasuk"
+                        onclick="setTransactionType('MASUK')"
+                    >
+                        ↑ Barang Masuk
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btnKeluar"
+                        onclick="setTransactionType('KELUAR')"
+                    >
+                        ↓ Barang Keluar
+                    </button>
+
+                </div>
+
+
+                <input
+                    type="hidden"
+                    id="transactionType"
+                    name="transaction_type"
+                    value="{{ scanned_type }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CURRENT STOCK -->
+
+            {% if scanned_product %}
+
+            <div class="current-stock">
+
+                <div class="current-stock-label">
+                    STOK SAAT INI
+                </div>
+
+                <div class="current-stock-value">
+                    {{ scanned_product["stock"] }}
+                    {{ scanned_product["unit"] }}
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- QUANTITY -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Jumlah
+                </label>
+
+                <input
+                    type="number"
+                    name="quantity"
+                    min="1"
+                    placeholder="Jumlah barang"
+                    required
+                >
+
+            </div>
+
+
+            <!-- USER -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    User
+                </label>
+
+                <input
+                    type="text"
+                    name="user_name"
+                    placeholder="Contoh: Admin Gudang"
+                >
+
+            </div>
+
+
+            <!-- CLIENT PC -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Client PC / Perangkat
+                </label>
+
+                <input
+                    type="text"
+                    name="client_pc"
+                    placeholder="Contoh: PC-GUDANG-01 / HP-GUDANG"
+                >
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div style="
+                display:flex;
+                gap:10px;
+                margin-top:20px;
+                flex-wrap:wrap;
+            ">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    onclick="return validateTransaction()"
+                >
+                    Simpan Transaksi
+                </button>
+
+
+                <a
+                    href="{{ url_for('scan') }}"
+                    class="btn btn-secondary"
+                >
+                    Kembali ke Scan
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         WORKFLOW
+    ====================================================== -->
+
+    <div class="card transaction-card">
+
+        <div class="transaction-title">
+            Alur Transaksi
+        </div>
+
+        <div class="transaction-description">
+            Proses pencatatan inventory.
+        </div>
+
+
+        <div class="workflow">
+
+
+            <div class="workflow-item">
+
+                <div class="workflow-number">
+                    01
+                </div>
+
+                <div>
+
+                    <div class="workflow-title">
+                        Scan Barcode
+                    </div>
+
+                    <div class="workflow-text">
+                        Sistem mencari produk berdasarkan barcode.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="workflow-item">
+
+                <div class="workflow-number">
+                    02
+                </div>
+
+                <div>
+
+                    <div class="workflow-title">
+                        Pilih Transaksi
+                    </div>
+
+                    <div class="workflow-text">
+                        Tentukan barang masuk atau barang keluar.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="workflow-item">
+
+                <div class="workflow-number">
+                    03
+                </div>
+
+                <div>
+
+                    <div class="workflow-title">
+                        Masukkan Jumlah
+                    </div>
+
+                    <div class="workflow-text">
+                        Tentukan jumlah barang yang diproses.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="workflow-item">
+
+                <div class="workflow-number">
+                    04
+                </div>
+
+                <div>
+
+                    <div class="workflow-title">
+                        Database Diperbarui
+                    </div>
+
+                    <div class="workflow-text">
+                        Stok dan histori transaksi tersimpan otomatis.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function setTransactionType(
+        type
+    ) {
+
+        const input =
+            document.getElementById(
+                "transactionType"
+            );
+
+        const btnMasuk =
+            document.getElementById(
+                "btnMasuk"
+            );
+
+        const btnKeluar =
+            document.getElementById(
+                "btnKeluar"
+            );
+
+
+        input.value =
+            type;
+
+
+        btnMasuk.classList.remove(
+            "active-in"
+        );
+
+
+        btnKeluar.classList.remove(
+            "active-out"
+        );
+
+
+        if (
+            type === "MASUK"
+        ) {
+
+            btnMasuk.classList.add(
+                "active-in"
+            );
+
+        }
+
+
+        if (
+            type === "KELUAR"
+        ) {
+
+            btnKeluar.classList.add(
+                "active-out"
+            );
+
+        }
+
+    }
+
+
+    function validateTransaction() {
+
+        const type =
+            document.getElementById(
+                "transactionType"
+            ).value;
+
+
+        if (
+            type !== "MASUK"
+            &&
+            type !== "KELUAR"
+        ) {
+
+            alert(
+                "Silakan pilih Barang Masuk atau Barang Keluar."
+            );
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+    window.addEventListener(
+        "load",
+        function () {
+
+            const initialType =
+                document.getElementById(
+                    "transactionType"
+                ).value;
+
+
+            if (
+                initialType === "MASUK"
+                ||
+                initialType === "KELUAR"
+            ) {
+
+                setTransactionType(
+                    initialType
+                );
+
+            }
+
+        }
+    );
+
+</script>
+
+{% endblock %}
